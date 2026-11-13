@@ -26,7 +26,7 @@ def main():
     with open(config_path, "r", encoding="utf-8") as f:
         config = json.load(f)
 
-    domain = config["domain"]
+    hosts = config["hosts"]
     output_dir = os.path.abspath(os.path.join(platform_dir, "..", "fernhill-uploads", "logs"))
     os.makedirs(output_dir, exist_ok=True)
 
@@ -119,7 +119,7 @@ def main():
 
         ip = random_client_ip()
         ua = random.choice(user_agents)
-        referer = f"https://www.{domain}/" if ("invoices" in path or "customers" in path) and random.random() < 0.7 else "-"
+        referer = f"https://{hosts['www']}/" if ("invoices" in path or "customers" in path) and random.random() < 0.7 else "-"
         time_local = dt.strftime("%d/%b/%Y:%H:%M:%S +0000")
 
         line = f'{ip} - - [{time_local}] "{method} {path} HTTP/1.1" {status} {bytes_sent} "{referer}" "{ua}"'
@@ -170,7 +170,7 @@ def main():
             "method": method,
             "path": path,
             "status": status,
-            "host": f"legacy.{domain}",
+            "host": hosts["legacy"],
             "duration_ms": round(random.uniform(5.0, 45.0), 2)
         }
         legacy_lines.append(json.dumps(record))
@@ -266,10 +266,10 @@ def main():
     t4 = t3 + datetime.timedelta(milliseconds=90)
 
     har_entries = [
-        make_har_entry(t1, "GET", f"https://www.{domain}/", 200, "text/html; charset=utf-8", html_content),
-        make_har_entry(t2, "GET", f"https://www.{domain}/assets/app.js", 200, "application/javascript; charset=utf-8", js_content),
-        make_har_entry(t3, "GET", f"https://api.{domain}/v2/invoices", 200, "application/json; charset=utf-8", invoices_json),
-        make_har_entry(t4, "GET", f"https://api.{domain}/v2/customers", 200, "application/json; charset=utf-8", customers_json),
+        make_har_entry(t1, "GET", f"https://{hosts['www']}/", 200, "text/html; charset=utf-8", html_content),
+        make_har_entry(t2, "GET", f"https://{hosts['www']}/assets/app.js", 200, "application/javascript; charset=utf-8", js_content),
+        make_har_entry(t3, "GET", f"https://{hosts['api']}/v2/invoices", 200, "application/json; charset=utf-8", invoices_json),
+        make_har_entry(t4, "GET", f"https://{hosts['api']}/v2/customers", 200, "application/json; charset=utf-8", customers_json),
     ]
 
     har_data = {

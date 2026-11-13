@@ -13,10 +13,6 @@ router.post('/admin/export', (req, res) => {
   res.status(202).json({ queued: true });
 });
 
-router.all('/admin/export', (req, res) => {
-  res.status(405).json({ error: 'method not allowed' });
-});
-
 router.get('/internal/metrics', requireAuth, (req, res) => {
   res.status(200).json({ requests: 1234 });
 });

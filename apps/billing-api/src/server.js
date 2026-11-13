@@ -15,6 +15,11 @@ app.use('/', legacyRouter);
 app.use('/', adminRouter);
 
 app.use((req, res) => {
+  // /admin/export only takes POST. Answering other methods here, rather than with
+  // router.all, keeps the code to the one route the demo plants.
+  if (req.path === '/admin/export') {
+    return res.status(405).json({ error: 'method not allowed' });
+  }
   res.status(404).json({ error: 'not found' });
 });
 

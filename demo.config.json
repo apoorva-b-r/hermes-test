@@ -1,4 +1,8 @@
 {
-  "domain": "yourdemo.com"
+  "hosts": {
+    "api": "fernhill-demo-billing.onrender.com",
+    "legacy": "fernhill-demo-legacy.onrender.com",
+    "admin": "fernhill-demo-admin.onrender.com",
+    "www": "fernhill-demo-web.onrender.com"
+  }
 }
-

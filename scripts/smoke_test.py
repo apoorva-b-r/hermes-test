@@ -26,7 +26,7 @@ TEST_CASES = [
     ("HEAD", "api", "/v2/reports/monthly", 404),
     ("HEAD", "legacy", "/api/v1/accounts", 200),
     ("HEAD", "legacy", "/api/v1/accounts/acc_001", 200),
-    ("HEAD", "legacy", "/api/v1/accounts/sync", 405),
+    ("HEAD", "legacy", "/api/v1/accounts/sync", 200),  # HEAD runs as GET, so /{account_id} answers
     ("HEAD", "legacy", "/api/v1/debug/config", 200),
     ("GET", "legacy", "/openapi.json", 404),
     ("HEAD", "admin", "/admin/users", 401),
@@ -39,7 +39,7 @@ TEST_CASES = [
 def send_request(url, method):
     parsed = urllib.parse.urlsplit(url)
     if parsed.scheme == "https":
-        conn = http.client.HTTPSConnection(parsed.netloc, timeout=10)
+        conn = http.client.HTTPSConnection(parsed.netloc, timeout=60)
     else:
         conn = http.client.HTTPConnection(parsed.netloc, timeout=10)
 
@@ -72,7 +72,7 @@ def main():
 
     with open(config_path, "r", encoding="utf-8") as f:
         config = json.load(f)
-    domain = config["domain"]
+    hosts = config["hosts"]
 
     if args.local:
         host_map = {
@@ -82,15 +82,10 @@ def main():
             "www": "http://localhost:3000",
         }
     else:
-        host_map = {
-            "api": f"https://api.{domain}",
-            "legacy": f"https://legacy.{domain}",
-            "admin": f"https://admin.{domain}",
-            "www": f"https://www.{domain}",
-        }
+        host_map = {alias: f"https://{host}" for alias, host in hosts.items()}
 
     failures = 0
-    print(f"\nRunning smoke test ({'local mode' if args.local else 'remote mode: ' + domain})...\n")
+    print(f"\nRunning smoke test ({'local mode' if args.local else 'remote mode'})...\n")
 
     for method, alias, path, expected in TEST_CASES:
         base_url = host_map[alias]
