@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: fernhill-billing
+    runtime: node
+    branch: production
+    rootDir: apps/billing-api
+    buildCommand: npm ci
+    startCommand: npm start
+    plan: starter
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+
+  - type: web
+    name: fernhill-legacy
+    runtime: python
+    branch: production
+    rootDir: apps/legacy-api
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: starter
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  - type: web
+    name: fernhill-admin
+    runtime: python
+    branch: production
+    rootDir: apps/admin-api
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    plan: starter
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  - type: web
+    name: fernhill-web
+    runtime: static
+    branch: production
+    rootDir: apps/web
+    staticPublishPath: "."

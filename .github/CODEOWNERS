@@ -1,0 +1,5 @@
+*                   @fernhill/platform-team
+/apps/billing-api/  @fernhill/billing-team
+/apps/legacy-api/   @fernhill/platform-team
+/apps/admin-api/    @fernhill/security-team
+/apps/web/          @fernhill/frontend-team
