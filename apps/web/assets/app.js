@@ -1,4 +1,4 @@
-fetch('https://api.yourdemo.com/v2/invoices')
+fetch('https://fernhill-demo-billing.onrender.com/v2/invoices')
   .then(response => response.json())
   .then(invoices => {
     const list = document.getElementById('invoices');
@@ -7,7 +7,7 @@ fetch('https://api.yourdemo.com/v2/invoices')
       li.textContent = 'Invoice #' + invoice.id;
       const id = invoice.id;
       li.addEventListener('click', () => {
-        fetch('https://api.yourdemo.com/v2/invoices/' + id);
+        fetch('https://fernhill-demo-billing.onrender.com/v2/invoices/' + id);
       });
       list.appendChild(li);
     });
@@ -16,7 +16,7 @@ fetch('https://api.yourdemo.com/v2/invoices')
     console.error('Error fetching invoices:', error);
   });
 
-fetch('https://api.yourdemo.com/v2/customers')
+fetch('https://fernhill-demo-billing.onrender.com/v2/customers')
   .then(response => response.json())
   .then(customers => {
     console.log('Customer count:', customers.length);

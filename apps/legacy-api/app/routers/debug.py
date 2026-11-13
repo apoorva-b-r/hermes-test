@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 router = APIRouter(prefix="/api/v1/debug")
 
-@router.api_route("/config", methods=["GET", "HEAD"])
+@router.get("/config")
 def get_debug_config():
     return {
         "region": "eu-west-2",
